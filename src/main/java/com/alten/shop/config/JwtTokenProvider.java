@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.alten.shop.service.UserService;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -22,7 +23,7 @@ public class JwtTokenProvider {
 	private UserService userService;
 
 	// Généré par https://jwtsecret.com/generate
-	private String jwtSecret = "1754075ff91dd43a501c62a1a42112fc96de8922e209370af120c3a3d6bfbb2e5f6ac944a311e4e70f587f17669f72d23e235f9f1291301e252f685f2bf8f459";
+	private String jwtSecret = "4e1a2010916bcca000f22d8b5cba0cb845b5967874d0384d6c8692bb8ff2ddee0b01c58d2e2fae04d1fad40f7bdadcc94601253368c5a2d59eea78783363a78a4e051abba98a0ccf2fc849bd1aab0478f2afb87ca47cff5f12f7986e5afbb4a67bcb2e56a3eeb6e4e88a0d7393f38e303a6247a83d9d5e7137c49692be5ffe1a42ad7c70dfa86f68b0c537e008418a02730984426b9c88ce0a03ec8007b77ef59ced4b16844fe97209d31c52d8509ba5279830fce462ff81a00c87b016f2ac0cdf40f922a43404ca539e6f20d339c15a0f004e8ac196c6af194ac3fad124339b93cf487eddfc8f6b79d7ac79baa20d61619718c6c06201ddbd8bd7b4c88ea390";
 	private long jwtExpirationDate = 3600000; // Le token sera expiré après une heure
 	
 	// Méthode de génération du token
@@ -37,6 +38,7 @@ public class JwtTokenProvider {
 						.subject(email)
 						.issuedAt(expireDate)
 						.claim("idUser", idUser)
+						.signWith(key(), SignatureAlgorithm.HS256)
 						.compact();
 		
 		return token;

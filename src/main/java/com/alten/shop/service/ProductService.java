@@ -29,47 +29,52 @@ public class ProductService {
 	// Création d'un produit
 	public void insertProduct(Product product) {
 		product.setId(null);
+		product.setCreatedAt(new Date());
 		productDao.save(product);
 	}
 	
 	// Modification d'un produit
-	public void updateProduct(Product product, Integer idProduct) {
-		if(productDao.findById(idProduct) != null) {
+	public void updateProduct(Integer idProduct, Product product) {
+		if(productDao.existsById(idProduct)) {
+			Product productRecup = productDao.findById(idProduct).get();
+			productRecup.setId(idProduct);
+			
 			if(product.getCode() != null) {
-				productDao.updateCode(idProduct, product.getCode());
+				productRecup.setCode(product.getCode());
 			}
 			if(product.getName() != null ) {
-				productDao.updateName(idProduct, product.getName());
+				productRecup.setName(product.getName());
 			}
 			if(product.getDescription() != null) {
-				productDao.updateDescription(idProduct, product.getDescription());
+				productRecup.setDescription(product.getDescription());
 			}
 			if(product.getImage() != null) {
-				productDao.updateImage(idProduct, product.getImage());
+				productRecup.setImage(product.getImage());
 			}
 			if(product.getCategory() != null) {
-				productDao.updateCategory(idProduct, product.getCategory());
+				productRecup.setCategory(product.getCategory());
 			}
 			if(product.getPrice() != null) {
-				productDao.updatePrice(idProduct, product.getPrice());
+				productRecup.setPrice(product.getPrice());
 			}
 			if(product.getQuantity() != null) {
-				productDao.updateQuantity(idProduct, product.getQuantity());
+				productRecup.setQuantity(product.getQuantity());
 			}
 			if(product.getInternalReference() != null) {
-				productDao.updateInternalReference(idProduct, product.getInternalReference());
+				productRecup.setInternalReference(product.getInternalReference());
 			}
 			if(product.getShellId() != null) {
-				productDao.updateShellId(idProduct, product.getShellId());
+				productRecup.setShellId(product.getShellId());
 			}
 			if(product.getInventoryStatus() != null) {
-				productDao.updateInventoryStatus(idProduct, product.getInventoryStatus());
+				productRecup.setInventoryStatus(product.getInventoryStatus());
 			}
 			if(product.getRating() != null) {
-				productDao.updateRating(idProduct, product.getRating());
+				productRecup.setRating(product.getRating());
 			}
 			// La date de mise à jour est quand la méthode est appelée 
-			productDao.updateUpdateAt(idProduct, new Date());
+			productRecup.setUpdateAt(new Date());
+			productDao.save(productRecup);
 		} else {
 			System.out.println("Le produit n'existe pas");
 		}

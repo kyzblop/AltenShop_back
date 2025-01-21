@@ -6,12 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +23,7 @@ import com.alten.shop.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*")
 public class ProductController {
 	
 	@Autowired
@@ -51,7 +53,8 @@ public class ProductController {
 	
 	// Création d'un produit
 	@PostMapping("")
-	public ResponseEntity<String> insertProduct(Product product) {
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity<String> insertProduct(@RequestBody Product product) {
 		try {
 			productService.insertProduct(product);
 			return ResponseEntity
@@ -66,9 +69,10 @@ public class ProductController {
 	
 	// Modification d'un produit
 	@PatchMapping("/{idProduct}")
-	public ResponseEntity<String> updateProduct(Product product, @PathVariable Integer idProduct) {
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity<String> updateProduct(@PathVariable Integer idProduct, @RequestBody Product product) {
 		try {
-			productService.updateProduct(product, idProduct);
+			productService.updateProduct(idProduct, product);
 			return ResponseEntity
 					.status(HttpStatus.OK)
 					.body("Le produit a bien été modifié");
@@ -81,6 +85,7 @@ public class ProductController {
 	
 	// Suppression d'un produit
 	@DeleteMapping("/{idProduct}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<String> deleteProduct(@PathVariable Integer idProduct) {
 		try {
 			productService.deleteProduct(idProduct);

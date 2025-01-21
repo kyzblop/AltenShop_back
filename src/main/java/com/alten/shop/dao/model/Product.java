@@ -29,7 +29,7 @@ public class Product implements Serializable {
 	@Column
 	private String description;
 	
-	@Column
+	@Column(columnDefinition ="LONGTEXT")
 	private String image;
 	
 	@Column
