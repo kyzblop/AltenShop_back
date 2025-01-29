@@ -53,6 +53,9 @@ public class AuthService {
 			throw new EmailAlreadyUsedException("Cet email est déjà utilisé");
 		}
 		
+		// Supprimer l'id pour sauvegarder une nouvelle entrée
+		user.setId(null);
+		
 		// Encoder le mot de passe
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedpassword = passwordEncoder.encode(user.getPassword());

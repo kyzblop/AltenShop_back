@@ -59,7 +59,8 @@ public class ProductController {
 			productService.insertProduct(product);
 			return ResponseEntity
 					.status(HttpStatus.CREATED)
-					.body("Le produit a été créé avec succès");
+					.build();
+					
 		} catch (Exception e) {
 			return ResponseEntity
 					.status(HttpStatus.CONFLICT)
@@ -75,7 +76,7 @@ public class ProductController {
 			productService.updateProduct(idProduct, product);
 			return ResponseEntity
 					.status(HttpStatus.OK)
-					.body("Le produit a bien été modifié");
+					.build();
 		} catch (Exception e) {
 			return ResponseEntity
 					.status(HttpStatus.CONFLICT)
@@ -91,7 +92,7 @@ public class ProductController {
 			productService.deleteProduct(idProduct);
 			return ResponseEntity
 					.status(HttpStatus.OK)
-					.body("Le produit a bien été supprimé");
+					.build();
 		} catch (Exception e) {
 			return ResponseEntity
 					.status(HttpStatus.CONFLICT)

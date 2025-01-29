@@ -24,16 +24,14 @@ public class AuthController {
 	
 	// Inscription d'un utilisateur
 	@PostMapping("/account")
-	public ResponseEntity<String> insertUser(@RequestBody User user) {
+	public ResponseEntity<User> insertUser(@RequestBody User user) {
 		try {
-			authService.register(user);
-			return ResponseEntity
-					.status(HttpStatus.CREATED)
-					.body("L'utilisateur a bien été créé");
+			User userRegister = authService.register(user);
+			return new ResponseEntity<User>(userRegister, HttpStatus.CREATED);
+					
 		} catch (Exception e) {
-			return ResponseEntity
-					.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+					
 		}
 	}
 	
