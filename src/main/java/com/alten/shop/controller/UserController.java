@@ -1,10 +1,10 @@
 package com.alten.shop.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,7 +31,7 @@ public class UserController {
 	@GetMapping("/{idUser}/panier")
 	public List<Product> getPanier(@PathVariable Integer idUser) {
 		List<Product> panierRecup = userService.getPanier(idUser);
-		if(!panierRecup.isEmpty()) {
+		if(panierRecup != null) {
 			return panierRecup;
 		} else {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Le panier est vide");
@@ -40,9 +40,9 @@ public class UserController {
 	
 	// Affichage de la liste d'envie de l'utilisateur
 	@GetMapping("/{idUser}/listeEnvie")
-	public List<Product> getListeEnvie(@PathVariable Integer idUser) {
-		List<Product> listeEnvie = userService.getListeEnvie(idUser);
-		if(!listeEnvie.isEmpty()) {
+	public Set<Product> getListeEnvie(@PathVariable Integer idUser) {
+		Set<Product> listeEnvie = userService.getListeEnvie(idUser);
+		if(listeEnvie != null) {
 			return listeEnvie;
 		} else {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT, "La liste d'envie est vide");
@@ -51,16 +51,12 @@ public class UserController {
 	
 	// Modification des deux listes de l'utilisateur
 	@PatchMapping("/{idUser}/modification")
-	public ResponseEntity<String> updatePanier(@PathVariable Integer idUser, @RequestBody User user){
+	public User updatePanier(@PathVariable Integer idUser, @RequestBody User user) throws Exception{
 		try {
-			userService.updateUser(idUser, user);
-			return ResponseEntity
-					.status(HttpStatus.OK)
-					.body("L'utilisateur a bien été modifié");
+			return userService.updateUser(idUser, user);
+			
 		} catch (Exception e) {
-			return ResponseEntity
-					.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
+			throw new Exception("Un problème lors de la mise à jour de l'utilisateur a été rencontré");
 		}
 	}
 

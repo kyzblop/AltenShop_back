@@ -54,35 +54,38 @@ public class ProductController {
 	// Création d'un produit
 	@PostMapping("")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<String> insertProduct(@RequestBody Product product) {
+	public Product insertProduct(@RequestBody Product product) throws Exception {
 		try {
-			productService.insertProduct(product);
-			return ResponseEntity
-					.status(HttpStatus.CREATED)
-					.build();
-					
+			return productService.insertProduct(product);		
 		} catch (Exception e) {
-			return ResponseEntity
-					.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
+			throw new Exception("Le produit n'a pas été créé");
 		}
 	}
 	
 	// Modification d'un produit
 	@PatchMapping("/{idProduct}")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<String> updateProduct(@PathVariable Integer idProduct, @RequestBody Product product) {
+	public Product updateProduct(@PathVariable Integer idProduct, @RequestBody Product product) throws Exception {
 		try {
-			productService.updateProduct(idProduct, product);
-			return ResponseEntity
-					.status(HttpStatus.OK)
-					.build();
+			return productService.updateProduct(idProduct, product);
+			
 		} catch (Exception e) {
-			return ResponseEntity
-					.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
+			throw new Exception("Le produit n'a pas été mis à jour");
 		}
 	}
+	
+	// Modification de la quantitéd'un produit
+		@PatchMapping("/{idProduct}/quantity")
+		public Product updateQuantityProduct(@PathVariable Integer idProduct, @RequestBody Integer quantity) throws Exception {
+			try {
+				Product product = new Product();
+				product.setQuantity(quantity);
+				return productService.updateProduct(idProduct, product);
+				
+			} catch (Exception e) {
+				throw new Exception("La quantité n'a pas été modifiée");
+			}
+		}
 	
 	// Suppression d'un produit
 	@DeleteMapping("/{idProduct}")

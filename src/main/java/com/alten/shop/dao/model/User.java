@@ -2,6 +2,7 @@ package com.alten.shop.dao.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.ManyToAny;
 
@@ -44,7 +45,7 @@ public class User implements Serializable{
 	@JoinTable(name="user_envie",
 					joinColumns = @JoinColumn(name="user_id", referencedColumnName = "id"),
 					inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName = "id"))
-	private List<Product> listEnvie;
+	private Set<Product> listEnvie;
 
 	public Integer getId() {
 		return id;
@@ -94,11 +95,11 @@ public class User implements Serializable{
 		this.panierAchat = panierAchat;
 	}
 
-	public List<Product> getListEnvie() {
+	public Set<Product> getListEnvie() {
 		return listEnvie;
 	}
 
-	public void setListEnvie(List<Product> listEnvie) {
+	public void setListEnvie(Set<Product> listEnvie) {
 		this.listEnvie = listEnvie;
 	}
 	

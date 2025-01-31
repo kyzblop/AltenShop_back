@@ -2,6 +2,7 @@ package com.alten.shop.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,22 +28,25 @@ public class UserService {
 	}
 	
 	// affichage de la liste d'envie de l'utilisateur
-	public List<Product> getListeEnvie(Integer idUser) {
+	public Set<Product> getListeEnvie(Integer idUser) {
 		return userDao.findById(idUser).get().getListEnvie();
 	}
 	
 	// Modification des listes de l'utilisateur (panier et liste d'envie) (Cette méthode pourrait être étendue à la modification de tous les champs d'un utilisateur
-	public void updateUser(Integer idUser, User user) {
+	public User updateUser(Integer idUser, User user) throws Exception {
 		if(userDao.existsById(idUser)) {
 			User userRecup = userDao.findById(idUser).get();
 			userRecup.setId(idUser);
-			if(!user.getPanierAchat().isEmpty()) {
+			if(user.getPanierAchat() != null) {
 				userRecup.setPanierAchat(user.getPanierAchat());
 			}
-			if(!user.getListEnvie().isEmpty()) {
+			if(user.getListEnvie() != null) {
 				userRecup.setListEnvie(user.getListEnvie());
 			}
 			userDao.save(userRecup);
+			return userRecup;		
+		} else {
+			throw new Exception("L'utilisateur n'existe pas");
 		}
 	}
 	

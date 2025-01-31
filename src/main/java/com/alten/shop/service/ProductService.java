@@ -27,14 +27,15 @@ public class ProductService {
 	}
 	
 	// Création d'un produit
-	public void insertProduct(Product product) {
+	public Product insertProduct(Product product) {
 		product.setId(null);
 		product.setCreatedAt(new Date());
 		productDao.save(product);
+		return product;
 	}
 	
 	// Modification d'un produit
-	public void updateProduct(Integer idProduct, Product product) {
+	public Product updateProduct(Integer idProduct, Product product) throws Exception {
 		if(productDao.existsById(idProduct)) {
 			Product productRecup = productDao.findById(idProduct).get();
 			productRecup.setId(idProduct);
@@ -75,8 +76,9 @@ public class ProductService {
 			// La date de mise à jour est quand la méthode est appelée 
 			productRecup.setUpdateAt(new Date());
 			productDao.save(productRecup);
+			return productRecup;
 		} else {
-			System.out.println("Le produit n'existe pas");
+			throw new Exception("Le produit n'existe pas");
 		}
 	}
 	
