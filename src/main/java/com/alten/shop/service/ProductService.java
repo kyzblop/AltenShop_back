@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alten.shop.dao.ProductDao;
+import com.alten.shop.dao.model.InventoryStatus;
 import com.alten.shop.dao.model.Product;
 
 @Service
@@ -60,15 +61,19 @@ public class ProductService {
 			}
 			if(product.getQuantity() != null) {
 				productRecup.setQuantity(product.getQuantity());
+				if(product.getQuantity() == 0) {
+					productRecup.setInventoryStatus(InventoryStatus.OUTOFSTOCK);
+				} else if(product.getQuantity() < 5) {
+					productRecup.setInventoryStatus(InventoryStatus.LOWSTOCK);
+				} else {
+					productRecup.setInventoryStatus(InventoryStatus.INSTOCK);
+				}
 			}
 			if(product.getInternalReference() != null) {
 				productRecup.setInternalReference(product.getInternalReference());
 			}
 			if(product.getShellId() != null) {
 				productRecup.setShellId(product.getShellId());
-			}
-			if(product.getInventoryStatus() != null) {
-				productRecup.setInventoryStatus(product.getInventoryStatus());
 			}
 			if(product.getRating() != null) {
 				productRecup.setRating(product.getRating());

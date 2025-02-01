@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alten.shop.dao.model.User;
 import com.alten.shop.dto.LoginDto;
 import com.alten.shop.dto.ResponseLoginDto;
+import com.alten.shop.exception.EmailAlreadyUsedException;
 import com.alten.shop.service.AuthService;
 
 @RestController
@@ -24,15 +26,17 @@ public class AuthController {
 	
 	// Inscription d'un utilisateur
 	@PostMapping("/account")
-	public ResponseEntity<User> insertUser(@RequestBody User user) {
-		try {
-			User userRegister = authService.register(user);
-			return new ResponseEntity<User>(userRegister, HttpStatus.CREATED);
-					
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
-					
-		}
+	public ResponseEntity<User> insertUser(@RequestBody User user) throws EmailAlreadyUsedException {
+		User userRegister = authService.register(user);
+		return new ResponseEntity<User>(userRegister, HttpStatus.CREATED);
+	}
+	
+	// Méthode pour gérer l'exception
+	@ExceptionHandler(EmailAlreadyUsedException.class)
+	public ResponseEntity<String> handleEmailAlreadyUsedException(EmailAlreadyUsedException e) {
+		return ResponseEntity
+				.status(HttpStatus.CONFLICT)
+				.body(e.getMessage());
 	}
 	
 	// Login d'un utilisateur
